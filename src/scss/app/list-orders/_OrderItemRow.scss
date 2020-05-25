@@ -1,0 +1,18 @@
+.RowItem {
+    width: 100rem;
+}
+
+.ItemCaption {
+    width: 9rem;
+}
+
+.thumbnails {
+    width: 72px;
+    height: auto;
+}
+
+@for $i from 1 through 20 {
+    .h-row-#{$i} {
+        height: $i * 10rem;
+    }
+}
