@@ -11,7 +11,7 @@ import {
     getOrderHistory,
     deleteOrderById,
     changeOrderPaymentStatus,
-    getApiUrl,
+    getApiUrl, markOrderPaidManually,
 } from '../../../services/api/OrderAdminServices'
 import {
     getOrder,
@@ -272,7 +272,8 @@ class OrderDetails extends Component {
         )
         if (confirmPaidManually) {
             const {editOrder, order} = this.state
-            const {success, data, message} = await changeOrderPaymentStatus(order._id, {payment_status: 'paid'})
+            // const {success, data, message} = await changeOrderPaymentStatus(order._id, {payment_status: 'paid'})
+            const {success, data, message} = await markOrderPaidManually(order._id, {payment_status: 'paid'})
 
             if (!success) return alert(message)
 

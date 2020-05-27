@@ -24,7 +24,8 @@ class ShippingModal extends Component {
     }
 
     _mapShipping = (order) => {
-        const {shipping} = order
+        const {shipping: _shipping} = order
+        const shipping = _shipping.length > 0 ? _shipping[0] : {}
         const {
             note,
             price,
@@ -68,7 +69,7 @@ class ShippingModal extends Component {
             )
             if (!success) return alert(message)
 
-            this.props.setShipping(data)
+            this.props.setShipping(data && [data] || [])
         } catch (e) {
             alert(e.message)
         }
@@ -185,7 +186,7 @@ class ShippingModal extends Component {
                 primaryAction={{
                     content: 'OK',
                     onAction: this._onClickSubmit,
-                    disabled: !this.props.order || !this.props.order.total_price,
+                    disabled: !this.props.order || !this.props.order.total_price || this.props.order.shipping.length > 0,
                 }}
                 secondaryActions={[
                     {

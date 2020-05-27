@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import {DescriptionList, TextStyle} from '@shopify/polaris'
 
 class OrderInvoice extends Component {
-    _renderNumber = (number) => {
+    _renderNumber = (number, postfix = true) => {
         if (!number || number < 0)
             return <TextStyle variation="subdued">0</TextStyle>
 
-        return Number(number).toLocaleString()
+        return `${Number(number).toLocaleString()}${postfix ? '$' : ''}`
     }
 
     _calculateInvoice = (_items, _shipping, total_price) => {
@@ -26,6 +26,7 @@ class OrderInvoice extends Component {
             }
         }, {quantity: 0, discount: 0, total: 0})
 
+        // console.log(_shipping)
         const shipping = _shipping.reduce((acc, ship) => {
             const {price} = ship
 
@@ -43,12 +44,12 @@ class OrderInvoice extends Component {
     render() {
         const {items, shipping: _shipping, total: total_price} = this.props
 
+        // console.log(_shipping)
         const {quantity, shipping, discount, total} = this._calculateInvoice(items, _shipping, total_price)
-
         const invoiceDetails = [
             {
                 term: 'Quantity',
-                description: this._renderNumber(quantity),
+                description: this._renderNumber(quantity, false),
             },
             {
                 term: 'Shipping',

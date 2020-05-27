@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {DescriptionList, Button, TextStyle} from '@shopify/polaris'
 import moment from 'moment'
 import '../../../scss/app.scss'
-import {changeOrderPaymentStatus} from '../../../services/api/OrderAdminServices'
+import {changeOrderPaymentStatus, markOrderPaidManually} from '../../../services/api/OrderAdminServices'
 
 class GeneralOrderDetails extends Component {
 
@@ -46,7 +46,8 @@ class GeneralOrderDetails extends Component {
         if (confirmPaidManually) {
             // const {id} = this.props.match.params
             const {order} = this.props
-            const {success, data, message} = await changeOrderPaymentStatus(order._id, {payment_status: 'paid'})
+            // const {success, data, message} = await changeOrderPaymentStatus(order._id, {payment_status: 'paid'})
+            const {success, data, message} = await markOrderPaidManually(order._id, {payment_status: 'paid'})
 
             if (!success) return alert(message)
 
@@ -56,12 +57,26 @@ class GeneralOrderDetails extends Component {
 
     render() {
         const {order} = this.props
-        const {payment_status, fulfillment_status, created_at} = order
+        const {payment_status, fulfillment_status, created_at, status} = order
 
         const statuses = [
             {
                 term: 'Created At',
                 description: (this._formatDate(created_at)),
+            },
+            {
+                term: 'Status',
+                description: (
+                    <div>
+                        {status && <b className="mr-1"><TextStyle
+                            variation={
+                                status !== 'pending' ? 'positive' : 'subdued'
+                            }
+                        >
+                            {this._upper(status)}
+                        </TextStyle></b>}
+                    </div>
+                ),
             },
             {
                 term: 'Payment Status',

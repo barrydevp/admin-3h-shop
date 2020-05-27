@@ -117,7 +117,7 @@ export const sendOrderToShipping = (orderId, shipping) => {
 
 export const markOrderPaidManually = (orderId) => {
     return api.makeAuthRequest({
-        url: `/${orderId}/paid`,
+        url: `/${orderId}/payment/paid`,
         method: 'post',
     })
 }
