@@ -1,6 +1,6 @@
 const baseUrl =
-    process.env.NODE_ENV === 'production' && process.env.NODE_PRIMARY_DOMAIN
-        ? `https://${process.env.NODE_PRIMARY_DOMAIN}/preview`
+    process.env.NODE_ENV === 'production' && process.env.REACT_APP_PRIMARY_DOMAIN
+        ? `https://${process.env.REACT_APP_PRIMARY_DOMAIN}/preview`
         : 'https://tile.merch8.com/preview'
 
 const getPreviewBaseURL = () => {

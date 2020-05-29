@@ -2,7 +2,7 @@ import createAPIServices from './createApiServices'
 import {getUserId} from '../AuthServices'
 import {DEFAULT_API} from '../../store/env'
 
-const baseUrl = process.env.NODE_ENV === 'production' ? `https://${process.env.NODE_PRIMARY_DOMAIN}/admin/users` : `${DEFAULT_API}/admin/users`
+const baseUrl = process.env.NODE_ENV === 'production' ? `https://${process.env.REACT_APP_PRIMARY_DOMAIN}/admin/users` : `${DEFAULT_API}/admin/users`
 const api = createAPIServices({baseUrl})
 
 export const auth = ({email, password}) => {

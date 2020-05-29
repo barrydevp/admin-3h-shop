@@ -1,7 +1,7 @@
 import createAPIServices from './createApiServices'
 import {DEFAULT_API} from '../../store/env'
 
-const baseUrl = process.env.NODE_ENV === 'production' ? `https://${process.env.NODE_PRIMARY_DOMAIN}/admin/orders` : `${DEFAULT_API}/admin/orders`
+const baseUrl = process.env.NODE_ENV === 'production' ? `https://${process.env.REACT_APP_PRIMARY_DOMAIN}/admin/orders` : `${DEFAULT_API}/admin/orders`
 
 const api = createAPIServices({baseUrl})
 
