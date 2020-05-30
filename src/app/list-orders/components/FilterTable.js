@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {ChoiceList, DatePicker, Filters, Loading} from '@shopify/polaris'
-import styles from '../static/styles'
 import fulfillmentStatuses from '../static/fulfillmentStatuses'
 import paymentStatuses from '../static/paymentStatuses'
 import keys from '../static/keys'
@@ -10,6 +9,7 @@ import moment from 'moment'
 const queryValueKeys = {
     code: 'Code',
     note: 'Note',
+    status: 'Status'
 }
 
 const queryDateLabels = {

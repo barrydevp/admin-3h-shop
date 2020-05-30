@@ -4,7 +4,7 @@ import {Layout, Page} from '@shopify/polaris'
 import UserProfile from './UserProfile'
 import UserSecurity from './UserSecurity'
 import UserElimination from './UserElimination'
-import getHistory from '../../../store/getHistory'
+import getHistory, {handleGoto} from '../../../store/getHistory'
 import {getUserById} from '../../../services/api/UserAdminServices'
 
 class UserDetails extends Component {
@@ -74,7 +74,7 @@ class UserDetails extends Component {
                 breadcrumbs={[
                     {
                         content: 'List Users',
-                        onAction: () => history.push('/d/users'),
+                        onAction: handleGoto('/users'),
                     },
                 ]}
                 className="UserDetails"

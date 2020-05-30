@@ -1,27 +1,21 @@
 import {Card, Layout, Page, PageActions} from '@shopify/polaris'
 import React, {Component} from 'react'
 import {
-    changeOrder,
     changeOrderFulfillmentStatus,
     changeOrderNote,
-    changeOrderStyle,
     changeOrderTags,
     deleteOrder,
-    getGhtkLabel,
-    getOrderHistory,
-    deleteOrderById,
-    changeOrderPaymentStatus,
-    getApiUrl, markOrderPaidManually,
+    markOrderPaidManually,
 } from '../../../services/api/OrderAdminServices'
 import {
     getOrder,
     getOrderItemByOrderId,
     getOrderCustomerByOrderId,
     getOrderShippingByOrderId,
+    getOrderCoupon,
 } from '../../../services/api/OrderServices'
 import getQueryString from '../../../services/QueryString'
 import {displayEditableFulfillmentStatus as displayFulfillmentStatus} from '../../../static/fulfillmentStatuses'
-import {displayOrderStyles} from '../../../static/orderStyles'
 import {useDashboardContext} from '../../shared/DashboardContext'
 import CustomerDetails from './CustomerDetails'
 import CustomerDetailsModal from './CustomerDetailsModal'
@@ -31,9 +25,9 @@ import OrderItems from './OrderItems'
 import OrderNote from './OrderNote'
 import ShippingModal from './ShippingModal'
 import {
-    PageDownMajorMonotone,
     ShipmentMajorMonotone,
 } from '@shopify/polaris-icons'
+import {handleGoto} from '../../../store/getHistory'
 
 class OrderDetails extends Component {
     state = {
@@ -61,16 +55,7 @@ class OrderDetails extends Component {
         this._fetchOrderItems().then()
         this._fetchOrderCustomer().then()
         this._fetchOrderShipping().then()
-    }
-
-    _resetOrder = () => {
-        this.setState(
-            {
-                isOrderEdited: false,
-                editOrder: this.state.order,
-            },
-            () => this._changeOrder(),
-        )
+        this._fetchOrderCoupon().then()
     }
 
     _changeOrder = () => {
@@ -79,12 +64,18 @@ class OrderDetails extends Component {
         })
     }
 
-    _fetchOrderHistory = async () => {
+    _fetchOrderCoupon = async () => {
         const {id} = this.props.match.params
-        const {success, data, message} = await getOrderHistory(id)
-
+        const {success, data, message} = await getOrderCoupon(id)
         if (!success) return console.log(message)
-        this.setState({orderHistory: data})
+        this.setState(({order}) => {
+            return {
+                order: {
+                    ...order,
+                    coupon: data,
+                },
+            }
+        }, () => this._changeOrder())
     }
 
     _fetchOrderItems = async () => {
@@ -149,17 +140,6 @@ class OrderDetails extends Component {
         )
     }
 
-    _onEditOk = (data) => {
-        this.setState(
-            {
-                order: data,
-                editOrder: data,
-                isOrderEdited: false,
-                editing: {},
-            },
-            () => this._changeOrder(),
-        )
-    }
 
     _onEditOrder = (order, editingAttribute) => {
         const {editOrder, editing} = this.state
@@ -194,35 +174,6 @@ class OrderDetails extends Component {
         return result
     }
 
-    _submitAddressChange = (address) => {
-        const {order, editOrder} = this.state
-
-        this.setState({
-            order: {...order, address},
-            editOrder: {...editOrder, address},
-            toggleEditCustomer: false,
-        })
-    }
-
-    _submitChange = async () => {
-        this.setState({loading: true})
-        const {editOrder} = this.state
-
-        const worker = [
-            ...this._getChangeMethods(),
-            changeOrder(editOrder._id, editOrder),
-        ]
-
-        try {
-            const resp = await Promise.all(worker)
-            this.setState({loading: false})
-            if (resp.some(({success}) => success)) console.log('Error')
-            this._onEditOk(editOrder)
-        } catch (e) {
-            this.setState({loading: false})
-            alert(e.message)
-        }
-    }
 
     _onDelete = () => {
         if (window.confirm('Are you sure to delete this order?'))
@@ -258,14 +209,6 @@ class OrderDetails extends Component {
         }))
     }
 
-    _getGhtkLabel = async () => {
-        const {order} = this.state
-        const {success, data, message} = await getGhtkLabel(order._id)
-        if (!success) return alert(message)
-        const newWindow = window.open(`${getApiUrl}${data}`, 'SHIPPING')
-        newWindow.focus()
-    }
-
     _markOrderPaidManually = async () => {
         const confirmPaidManually = window.confirm(
             'Are you sure with this change?',
@@ -298,28 +241,6 @@ class OrderDetails extends Component {
         }
     }
 
-    _changeOrderStyle = async (style) => {
-        const {order, editOrder} = this.state
-        try {
-            const {success, data, message} = await changeOrderStyle(order._id, {
-                style,
-            })
-            if (!success) return console.log(message)
-            this.setState({
-                order: {
-                    ...order,
-                    ...data,
-                },
-                editOrder: {
-                    ...editOrder,
-                    ...data,
-                },
-            })
-        } catch (e) {
-            return console.log(e)
-        }
-    }
-
     _setShipping = (shipping) => {
         this.setState(({order}) => {
             return {
@@ -331,25 +252,11 @@ class OrderDetails extends Component {
         })
     }
 
-    _renderStyleActions = () => {
-        return displayOrderStyles.map(({value, label}) => ({
-            content: label,
-            onAction: () => this._changeOrderStyle(value),
-        }))
-    }
-
     _renderFulfillmentStatusActions = () => {
         return displayFulfillmentStatus.map(({value, label}) => ({
             content: label,
             onAction: () => this._changeOrderFulfillmentStatus(value),
         }))
-    }
-
-    _renderStyle = (style) => {
-        const found = displayOrderStyles.find(({value}) => value === style)
-
-        if (found) return found.label
-        return ''
     }
 
     _renderFulfillmentStatus = (status) => {
@@ -368,12 +275,17 @@ class OrderDetails extends Component {
             isOrderFetched,
             loading,
             toggleShipping,
+            toggleEditCustomer,
         } = this.state
         
         const fulfillmentStatusActions = this._renderFulfillmentStatusActions()
         const fulfillmentStatus = this._renderFulfillmentStatus(
             editOrder.fulfillment_status,
         )
+
+        const customerDetailsActions = [
+            {content: 'Edit', onAction: this._toggleEditCustomerDetails},
+        ]
 
         return (
             <Page
@@ -392,7 +304,7 @@ class OrderDetails extends Component {
                         actions: fulfillmentStatusActions,
                     },
                 ]}
-                breadcrumbs={[{content: 'Orders', url: '/orders'}]}
+                breadcrumbs={[{content: 'Orders', onAction: handleGoto('/orders')}]}
             >
                 <ShippingModal
                     open={toggleShipping}
@@ -422,14 +334,20 @@ class OrderDetails extends Component {
                         </Card>
                     </Layout.Section>
                     <Layout.Section secondary>
+                        <CustomerDetailsModal
+                            customer={order.customer}
+                            onToggle={this._toggleEditCustomerDetails}
+                            open={toggleEditCustomer}
+                            fetchOrderCustomer={this._fetchOrderCustomer}
+                            orderId={order._id}
+                        />
                         <Card
                             title="Customer"
                             sectioned
-                            // actions={customerDetailsActions}
+                            actions={customerDetailsActions}
                         >
                             <CustomerDetails
                                 customer={order.customer || {}}
-                                isOrderChanged={isOrderFetched}
                                 onChange={this._onEditOrder}
                             />
                         </Card>

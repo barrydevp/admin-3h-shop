@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import moment from 'moment'
-import {getStatistics} from '../../../services/api/OrderStatisticsServers'
+import {statisticOrder} from '../../../services/api/StatisticAdminServices'
 import {
     Button,
     ButtonGroup,
@@ -13,8 +13,8 @@ import {
 const queryTypes = {
     today: ['today', 'Today'],
     yesterday: ['yesterday', 'Yesterday'],
-    seven_days: ['seven_days', 'Last 7 days'],
     week: ['week', 'This week'],
+    seven_days: ['seven_days', 'Last 7 days'],
     month: ['month', 'This month'],
     threeMonth: ['threeMonth', '3 months'],
     allTime: ['allTime', 'All time'],
@@ -23,30 +23,30 @@ const queryTypes = {
 
 const ranges = {
     yesterday: {
-        start_date: new Date(
-            moment(moment().subtract(1, 'day')).startOf('day')
+        created_at_from: new Date(
+            moment(moment().subtract(1, 'day')).startOf('day'),
         ),
-        end_date: new Date(moment().startOf('day')),
+        created_at_to: new Date(moment().startOf('day')),
     },
     today: {
-        start_date: new Date(moment().startOf('day')),
-        end_date: new Date(),
+        created_at_from: new Date(moment().startOf('day')),
+        created_at_to: new Date(),
     },
     month: {
-        start_date: new Date(moment().startOf('month')),
-        end_date: new Date(),
+        created_at_from: new Date(moment().startOf('month')),
+        created_at_to: new Date(),
     },
     week: {
-        start_date: new Date(moment().startOf('week')),
-        end_date: new Date(),
+        created_at_from: new Date(moment().startOf('week')),
+        created_at_to: new Date(),
     },
     seven_days: {
-        start_date: new Date(moment().subtract(7, 'day')),
-        end_date: new Date(),
+        created_at_from: new Date(moment().subtract(7, 'day')),
+        created_at_to: new Date(),
     },
     threeMonth: {
-        start_date: new Date(moment().subtract(3, 'month')),
-        end_date: new Date(),
+        created_at_from: new Date(moment().subtract(3, 'month')),
+        created_at_to: new Date(),
     },
     allTime: {
         is_all_time: true,
@@ -59,8 +59,13 @@ class Statistics extends Component {
         queryType: queryTypes.today[0],
         loading: false,
         statistics: {
-            payment_status: {result: [], total: 0},
-            fulfillment_status: {result: [], total: 0},
+            'pending': 0,
+            'paid': 0,
+            'in_production': 0,
+            'shipped': 0,
+            'cancelled': 0,
+            'fulfilled': 0,
+            'total_order': 0,
         },
         toggleCustomRange: false,
         displayPicker: {
@@ -86,8 +91,8 @@ class Statistics extends Component {
         // console.log(start, end)
         this.setState({
             query: {
-                start_date: start,
-                end_date: end,
+                created_at_from: start,
+                created_at_to: end,
             },
         })
     }
@@ -96,8 +101,8 @@ class Statistics extends Component {
         const {toggleCustomRange} = this.state
         this.setState({
             query: {
-                start_date: new Date(),
-                end_date: new Date(),
+                created_at_from: new Date(),
+                created_at_to: new Date(),
             },
             queryType: 'custom',
             toggleCustomRange: !toggleCustomRange,
@@ -114,7 +119,7 @@ class Statistics extends Component {
                 queryType: type,
                 toggleCustomRange: false,
             },
-            () => this._fetchStatistics()
+            () => this._fetchStatistics(),
         )
     }
 
@@ -125,7 +130,7 @@ class Statistics extends Component {
             loading: true,
         })
         try {
-            const {success, data, message} = await getStatistics(query)
+            const {success, data, message} = await statisticOrder(query)
             this.setState({loading: false})
             if (!success) return alert(message)
             this.setState({statistics: data})
@@ -138,8 +143,8 @@ class Statistics extends Component {
     _upper = (value) => value.charAt(0).toUpperCase() + value.slice(1)
 
     _makeDescriptionList = (data) => {
-        if (!data.length) return []
-        return Object.entries(data[0]).map(([key, value]) => ({
+        console.log(data)
+        return Object.entries(data).map(([key, value]) => ({
             term: this._upper(key),
             description: value,
         }))
@@ -174,11 +179,11 @@ class Statistics extends Component {
             queryType,
         } = this.state
         if (!toggleCustomRange) return null
-        const {start_date, end_date} = query
+        const {created_at_from, created_at_to} = query
         // console.log(query)
         const selected = {
-            start: start_date || new Date(),
-            end: end_date || new Date(),
+            start: created_at_from || new Date(),
+            end: created_at_to || new Date(),
         }
         // console.log(selected)
         return (
@@ -211,9 +216,9 @@ class Statistics extends Component {
 
     render() {
         const {statistics} = this.state
-        const {payment_status, fulfillment_status} = statistics
-        const payments = this._makeDescriptionList(payment_status.result)
-        const fulfillment = this._makeDescriptionList(fulfillment_status.result)
+        // const {payment_status, fulfillment_status} = statistics
+        const statuses = this._makeDescriptionList(statistics)
+        // const fulfillment = this._makeDescriptionList(fulfillment_status.result)
         const filterGroups = this._renderFilterGroups()
         const datePicker = this._renderDatePicker()
 
@@ -224,16 +229,16 @@ class Statistics extends Component {
                     {datePicker}
                 </div>
                 <Layout>
-                    <Layout.Section oneHalf>
-                        <Card title="Payment" sectioned>
-                            <DescriptionList items={payments} />
+                    <Layout.Section>
+                        <Card title="Status" sectioned>
+                            <DescriptionList items={statuses}/>
                         </Card>
                     </Layout.Section>
-                    <Layout.Section oneHalf>
-                        <Card title="Fulfillment" sectioned>
-                            <DescriptionList items={fulfillment} />
-                        </Card>
-                    </Layout.Section>
+                    {/*<Layout.Section oneHalf>*/}
+                    {/*    <Card title="Fulfillment" sectioned>*/}
+                    {/*        <DescriptionList items={fulfillment} />*/}
+                    {/*    </Card>*/}
+                    {/*</Layout.Section>*/}
                 </Layout>
             </>
         )

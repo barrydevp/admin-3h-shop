@@ -30,7 +30,7 @@ class TopBarUserMenu extends React.Component {
                             {
                                 content: 'Profile',
                                 icon: ProfileMajorMonotone,
-                                onAction: this.handleGoto('/d/profile'),
+                                onAction: this.handleGoto('/profile'),
                             },
                         ],
                     },

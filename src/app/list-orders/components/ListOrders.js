@@ -7,6 +7,7 @@ import FilterTable from './FilterTable'
 
 const _parseQuery = ({
     code,
+    status,
     payment_status,
     fulfillment_status,
     note,
@@ -23,6 +24,10 @@ const _parseQuery = ({
 
     if (code) {
         query._id = code.trim()
+    }
+
+    if (status) {
+        query.status = status
     }
 
     if (note) {
@@ -77,6 +82,7 @@ class ListOrders extends Component {
         query: {
             code: '',
             note: '',
+            status: '',
             payment_status: '',
             fulfillment_status: '',
             paid_at_from: '',

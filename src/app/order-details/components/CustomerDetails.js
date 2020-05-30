@@ -18,7 +18,6 @@ class CustomerDetails extends Component {
 
 CustomerDetails.propTypes = {
     onChange: PropTypes.func.isRequired,
-    isOrderChanged: PropTypes.bool.isRequired,
     customer: PropTypes.object.isRequired,
 }
 

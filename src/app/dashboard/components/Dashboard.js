@@ -15,6 +15,9 @@ import StoreSettingsContainer from '../../store-settings/components/StoreSetting
 import TrackingContainer from '../../tracking-details/components/TrackingContainer'
 import StoreDetailContainer from '../../store-details/components/StoreDetailContainer'
 import BankDetailContainer from '../../bank-details/components/BankDetailContainer'
+import ListProductContainer from '../../list-products/Components/ListProductContainer'
+import ProductDetailsContainer from '../../product-details/components/ProductDetailsContainer'
+import ListCouponContainer from '../../list-coupons/Components/ListCouponContainer'
 
 class Dashboard extends Component {
     state = {
@@ -93,11 +96,11 @@ class Dashboard extends Component {
                 )}
                 <DashboardContextProvider value={dashboardContext}>
                     <Switch>
-                        {/*<Route*/}
-                        {/*    exact*/}
-                        {/*    path={'/statistics'}*/}
-                        {/*    component={StatisticsContainer}*/}
-                        {/*/>*/}
+                        <Route
+                            exact
+                            path={'/statistics'}
+                            component={StatisticsContainer}
+                        />
                         <Route
                             exact
                             path={'/orders'}
@@ -127,6 +130,34 @@ class Dashboard extends Component {
                                 component={UserDetailsContainer}
                             />
                         )}
+                        {hasRoles(1) && (
+                            <Route
+                                exact
+                                path={'/products'}
+                                component={ListProductContainer}
+                            />
+                        )}
+                        {hasRoles(1) && (
+                            <Route
+                                exact
+                                path={'/products/:id'}
+                                component={ProductDetailsContainer}
+                            />
+                        )}
+                        {hasRoles(1) && (
+                            <Route
+                                exact
+                                path={'/coupons'}
+                                component={ListCouponContainer}
+                            />
+                        )}
+                        {/*{hasRoles(1) && (*/}
+                        {/*    <Route*/}
+                        {/*        exact*/}
+                        {/*        path={'/products/:id'}*/}
+                        {/*        component={ProductDetailsContainer}*/}
+                        {/*    />*/}
+                        {/*)}*/}
                         {/*{hasRoles(1) && (*/}
                         {/*    <Route*/}
                         {/*        exact*/}

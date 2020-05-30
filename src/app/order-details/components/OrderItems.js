@@ -1,10 +1,10 @@
 import React, {Component, Fragment} from 'react'
 import PropTypes from 'prop-types'
-import {Button, DescriptionList} from '@shopify/polaris'
+import {Button, DescriptionList, TextStyle} from '@shopify/polaris'
 
 class OrderItems extends Component {
     _renderOrderItem = (item) => {
-        const {order_item: orderItem, product} = item
+        const {order_item: orderItem, product, warranty} = item
         const {_id: order_item_id, quantity} = orderItem
         const {_id: product_id, discount, image_path, name, out_price} = product
 
@@ -13,6 +13,20 @@ class OrderItems extends Component {
             {term: 'Price', description: `${Number(out_price).toLocaleString()}$`},
             {term: 'Discount', description: `${Math.round(Number(discount).toLocaleString() * 100)}%`},
             {term: 'Quantity', description: `${Number(quantity).toLocaleString()}`},
+            {
+                term: 'Warranty',
+                description: (
+                    <div>
+                        {warranty && <b className="mr-1"><TextStyle
+                            variation={
+                                'subdued'
+                            }
+                        >
+                            {JSON.stringify(warranty)}
+                        </TextStyle></b>}
+                    </div>
+                ),
+            },
         ]
 
         return (

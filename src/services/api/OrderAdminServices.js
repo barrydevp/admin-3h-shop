@@ -54,11 +54,11 @@ export const changeOrderNote = (orderId, order) => {
     })
 }
 
-export const changeOrderAddress = (orderId, orderDetails) => {
+export const updateOrderCustomer = (orderId, customer) => {
     return api.makeAuthRequest({
-        url: `/${orderId}/address`,
+        url: `/${orderId}/customer/update`,
         method: 'post',
-        data: orderDetails,
+        data: customer,
     })
 }
 

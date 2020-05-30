@@ -57,7 +57,7 @@ class GeneralOrderDetails extends Component {
 
     render() {
         const {order} = this.props
-        const {payment_status, fulfillment_status, created_at, status} = order
+        const {payment_status, fulfillment_status, created_at, status, coupon} = order
 
         const statuses = [
             {
@@ -73,7 +73,7 @@ class GeneralOrderDetails extends Component {
                                 status !== 'pending' ? 'positive' : 'subdued'
                             }
                         >
-                            {this._upper(status)}
+                            {status}
                         </TextStyle></b>}
                     </div>
                 ),
@@ -109,6 +109,20 @@ class GeneralOrderDetails extends Component {
                             {this._upper(fulfillment_status)}
                         </TextStyle></b>}
                         {this._getFulfillDate()}
+                    </div>
+                ),
+            },
+            {
+                term: 'Coupon',
+                description: (
+                    <div>
+                        {coupon && <b className="mr-1"><TextStyle
+                            variation={
+                                'positive'
+                            }
+                        >
+                            {JSON.stringify(coupon)}
+                        </TextStyle></b>}
                     </div>
                 ),
             },

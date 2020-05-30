@@ -34,6 +34,13 @@ export const getOrderShippingByOrderId = (orderId) => {
     })
 }
 
+export const getOrderCoupon = (orderId) => {
+    return api.makeAuthRequest({
+        url: `/${orderId}/coupon`,
+        method: 'get',
+    })
+}
+
 export const insertOrderItem = (orderId, item) => {
     return api.makeRequest({
         url: `/${orderId}/items`,

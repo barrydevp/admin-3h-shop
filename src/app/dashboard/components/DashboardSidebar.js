@@ -6,12 +6,12 @@ import {
     CustomersMajorMonotone,
     OrdersMajorMonotone,
     ProfileMajorMonotone,
-    SettingsMajorMonotone,
+    ProductsMajorMonotone,
 } from '@shopify/polaris-icons'
 import {hasRoles} from '../../../services/AuthServices'
 
 const routes = [
-    // {label: 'Statistics', icon: AnalyticsMajorMonotone, path: '/statistics'},
+    {label: 'Statistics', icon: AnalyticsMajorMonotone, path: '/statistics'},
     {label: 'Orders', icon: OrdersMajorMonotone, path: '/orders'},
 ]
 
@@ -60,11 +60,16 @@ const DashboardSidebar = (props) => {
                     icon: CustomersMajorMonotone,
                     onClick: () => handleGoto('/users'),
                 },
-                // {
-                //     label: 'Store Settings',
-                //     icon: SettingsMajorMonotone,
-                //     onClick: () => handleGoto('/store-settings'),
-                // },
+                {
+                    label: 'Products',
+                    icon: ProductsMajorMonotone,
+                    onClick: () => handleGoto('/products'),
+                },
+                {
+                    label: 'Coupons',
+                    icon: ProductsMajorMonotone,
+                    onClick: () => handleGoto('/coupons'),
+                },
             ]}
         />
     )

@@ -110,7 +110,7 @@ class OrderTable extends Component {
                             : 'positive'
                     }
                 >
-                    {this._upper(status)}
+                    {status}
                 </TextStyle>
             )
 
