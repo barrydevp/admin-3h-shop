@@ -7,6 +7,8 @@ import {
     OrdersMajorMonotone,
     ProfileMajorMonotone,
     ProductsMajorMonotone,
+    StoreMajorMonotone,
+    LegalMajorMonotone,
 } from '@shopify/polaris-icons'
 import {hasRoles} from '../../../services/AuthServices'
 
@@ -62,13 +64,18 @@ const DashboardSidebar = (props) => {
                 },
                 {
                     label: 'Products',
-                    icon: ProductsMajorMonotone,
+                    icon: StoreMajorMonotone,
                     onClick: () => handleGoto('/products'),
                 },
                 {
                     label: 'Coupons',
                     icon: ProductsMajorMonotone,
                     onClick: () => handleGoto('/coupons'),
+                },
+                {
+                    label: 'Warranties',
+                    icon: LegalMajorMonotone,
+                    onClick: () => handleGoto('/warranties'),
                 },
             ]}
         />

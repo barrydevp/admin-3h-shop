@@ -8,6 +8,12 @@ import {getLabelUserRole} from '../../../static/userRoles'
 const defaultHeader = ['Name', 'Email', 'Role', 'Status', 'Updated', 'Created']
 const defaultColumnContentTypes = ['text', 'text', 'text', 'text', 'text']
 
+const roleStyleStatus = {
+    21: 'warning',
+    11: 'info',
+    1: 'critical',
+}
+
 const _formatDate = (date) => {
     return date ? moment(date).format('llll') : ''
 }
@@ -15,7 +21,7 @@ const _formatDate = (date) => {
 class UserTable extends React.Component {
     getUserDetailLink = (user) => {
         const {_id} = user
-        return `/d/users/${_id}`
+        return `/users/${_id}`
     }
 
     makeRow = (users) => {
@@ -31,27 +37,21 @@ class UserTable extends React.Component {
             const roleLabel = getLabelUserRole(user.role)
 
             const roleCol = (
-                <Stack spacing="none">
-                    <Badge
-                        status={roleLabel === 'Admin' ? 'attention' : 'info'}
-                    >
-                        {roleLabel}
-                    </Badge>
-                    ))}
-                </Stack>
+                <Badge
+                    status={roleStyleStatus[user.role] || ''}
+                >
+                    {roleLabel}
+                </Badge>
             )
             const statusCol = (
-                <Stack spacing="none">
-                    <Badge
-                        status={user.status === 'active' ? 'success' : ''}
-                        progress={
-                            user.status === 'active' ? 'complete' : 'incomplete'
-                        }
-                    >
-                        {user.status}
-                    </Badge>
-                    ))}
-                </Stack>
+                <Badge
+                    status={user.status === 'active' ? 'success' : ''}
+                    progress={
+                        user.status === 'active' ? 'complete' : 'incomplete'
+                    }
+                >
+                    {user.status}
+                </Badge>
             )
             const emailCol = <TextStyle>{user.email}</TextStyle>
             const updatedAtCol = (

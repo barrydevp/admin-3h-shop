@@ -11,7 +11,7 @@ class LogoutPage extends Component {
         logoutUser()
 
         const history = getHistory()
-        history.push('/')
+        history.push('/login')
     }
 
     render() {

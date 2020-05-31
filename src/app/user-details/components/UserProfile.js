@@ -22,7 +22,7 @@ const _parseUser = ({email, name, status}) => {
     const user = {}
     if (safeTrim(email) !== '') user.email = email
     if (safeTrim(name) !== '') user.name = name
-    if (safeTrim(status) !== '') user.status = status
+    // if (safeTrim(status) !== '') user.status = status
 
     return user
 }
@@ -54,7 +54,7 @@ class UserProfile extends React.Component {
                     ...updatedUser,
                 },
             }),
-            callback
+            callback,
         )
     }
 
@@ -98,7 +98,7 @@ class UserProfile extends React.Component {
                 {
                     isSubmit: false,
                 },
-                () => updateProps({loading: false})
+                () => updateProps({loading: false}),
             )
 
             throw e
@@ -121,7 +121,7 @@ class UserProfile extends React.Component {
             const vUser = _parseUser(user)
             const {success, data, message} = await updateUserById(
                 user._id,
-                vUser
+                vUser,
             )
 
             if (!success) throw new Error(message)
@@ -147,7 +147,7 @@ class UserProfile extends React.Component {
                         success: '',
                     },
                 },
-                () => updateProps({loading: false})
+                () => updateProps({loading: false}),
             )
             alert(e.message || 'Error.')
         }
@@ -165,7 +165,7 @@ class UserProfile extends React.Component {
 
     _canDiscard = (
         {name: _name, email: _email, status: _status},
-        {name, email, status}
+        {name, email, status},
     ) => {
         return _name !== name || _email !== email || _status !== status
     }
@@ -196,7 +196,7 @@ class UserProfile extends React.Component {
                     save={this._changeRole}
                     role={role}
                 />
-                <Card title="Details">
+                <Card title={'Details ' + name}>
                     <Card.Section>
                         <Form onSubmit={this.handleSave}>
                             <FormLayout>
@@ -230,7 +230,7 @@ class UserProfile extends React.Component {
                                     onChange={this._onChangeUser('status')}
                                     disabled
                                 />
-                                <InlineError message={message.error} />
+                                <InlineError message={message.error}/>
                                 <TextStyle variation="positive">
                                     {message.success}
                                 </TextStyle>

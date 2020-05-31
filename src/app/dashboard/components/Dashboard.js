@@ -18,6 +18,7 @@ import BankDetailContainer from '../../bank-details/components/BankDetailContain
 import ListProductContainer from '../../list-products/Components/ListProductContainer'
 import ProductDetailsContainer from '../../product-details/components/ProductDetailsContainer'
 import ListCouponContainer from '../../list-coupons/Components/ListCouponContainer'
+import ListWarrantyContainer from '../../list-warranties/Components/ListWarrantyContainer'
 
 class Dashboard extends Component {
     state = {
@@ -151,13 +152,12 @@ class Dashboard extends Component {
                                 component={ListCouponContainer}
                             />
                         )}
-                        {/*{hasRoles(1) && (*/}
-                        {/*    <Route*/}
-                        {/*        exact*/}
-                        {/*        path={'/products/:id'}*/}
-                        {/*        component={ProductDetailsContainer}*/}
-                        {/*    />*/}
-                        {/*)}*/}
+                        {hasRoles(1) && (
+                            <Route
+                                exact
+                                path={'/warranties'}
+                                component={ListWarrantyContainer}/>
+                        )}
                         {/*{hasRoles(1) && (*/}
                         {/*    <Route*/}
                         {/*        exact*/}

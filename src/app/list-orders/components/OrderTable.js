@@ -5,6 +5,14 @@ import {withRouter} from 'react-router'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 
+const fulfillmentStatusStyleStatus = {
+    'pending': '',
+    'fulfilled': 'success',
+    'in-production': 'attention',
+    'shipped': 'info',
+    'cancelled': 'critical',
+}
+
 const tableCol = [
     'Code',
     'Status',
@@ -35,19 +43,6 @@ class OrderTable extends Component {
     _formatDate = (date, format = 'llll') =>
         date ? moment(date).format(format) : ''
 
-    _makeTags = (tags, _id) => {
-        if (Array.isArray(tags)) {
-            return tags.map((e, i) => <Badge key={_id + i + e}>{e}</Badge>)
-        }
-
-        return null
-    }
-
-    _clickEdit = (order) => {
-        const {_id} = order
-        this.props.history.push(`/orders/${_id}`)
-    }
-
     _getDetailLink = (order) => {
         const {_id} = order
         return `/orders/${_id}`
@@ -77,27 +72,12 @@ class OrderTable extends Component {
             )
 
             const paymentEl = payment_status && (
-                <TextStyle
-                    variation={
-                        payment_status === 'paid' ? 'positive' : 'subdued'
-                    }
-                >
-                    {this._upper(payment_status)}
-                </TextStyle>
+                <Badge status={payment_status === 'pending' ? '' : 'success'}
+                       progress={payment_status === 'pending' ? 'incomplete' : 'complete'}>{payment_status}</Badge>
             )
 
             const fulfillmentEl = fulfillment_status && (
-                <TextStyle
-                    variation={
-                        fulfillment_status === 'fulfilled'
-                            ? 'positive'
-                            : fulfillment_status === 'cancelled'
-                            ? 'negative'
-                            : 'subdued'
-                    }
-                >
-                    {this._upper(fulfillment_status)}
-                </TextStyle>
+                <Badge status={fulfillmentStatusStyleStatus[fulfillment_status] || ''}>{fulfillment_status}</Badge>
             )
 
             const statusEl = status && (

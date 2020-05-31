@@ -1,30 +1,30 @@
 import React from 'react'
-import {DataTable, TextStyle, Badge} from '@shopify/polaris'
+import {Badge, DataTable, Stack, TextStyle} from '@shopify/polaris'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import UpdateCouponModal from './UpdateCouponModal'
+import UpdateWarrantyModal from './UpdateWarrantyModal'
 
-const defaultHeader = ['Code', 'Discount', 'Description', 'Expires at', 'Updated at']
+const defaultHeader = ['Code', 'Month', 'Trial', 'Description', 'Category id']
 const defaultColumnContentTypes = ['text', 'text', 'text', 'text', 'text']
 
 const _formatDate = (date, format = 'llll') =>
     date ? moment(date).format(format) : ''
 
-class CouponTable extends React.Component {
+class WarrantyTable extends React.Component {
     state = {
-        couponId: 0,
+        warrantyId: 0,
     }
 
     toggleUpdate = (_id) => () => {
         this.setState({
-            couponId: _id,
+            warrantyId: _id,
         })
     }
 
-    makeRow = (coupons) => {
+    makeRow = (warranties) => {
         const rows = []
 
-        coupons.forEach(({_id, code, description, discount, expires_at, updated_at}) => {
+        warranties.forEach(({_id, code, description, month, trial, category_id}) => {
             const codeCol = (
                 <span className="cursor-pointer text-blue-500" onClick={this.toggleUpdate(_id)}>
                     {code}
@@ -33,30 +33,40 @@ class CouponTable extends React.Component {
 
             const descriptionCol = description
 
-            const discountCol = (
-                <Badge
-                    status={'attention'}
-                >
-                    {discount}
-                </Badge>
+            const monthCol = (
+                <Stack spacing="none">
+                    <Badge
+                        status={'attention'}
+                    >
+                        {month + ' months'}
+                    </Badge>
+                    ))}
+                </Stack>
             )
 
-            const expiresAtCol = expires_at && <TextStyle variation="negative">
-                {_formatDate(expires_at)}
-            </TextStyle>
+            const trialCol = (
+                <Stack spacing="none">
+                    <Badge
+                        status={'info'}
+                    >
+                        {trial + ' days'}
+                    </Badge>
+                    ))}
+                </Stack>
+            )
 
-            const updatedAtCol = updated_at && (
+            const categoryIdCol = (
                 <TextStyle variation="positive">
-                    {_formatDate(updated_at)}
+                    {category_id}
                 </TextStyle>
             )
 
             rows.push([
                 codeCol,
-                discountCol,
+                monthCol,
+                trialCol,
                 descriptionCol,
-                expiresAtCol,
-                updatedAtCol,
+                categoryIdCol,
             ])
         })
 
@@ -74,10 +84,10 @@ class CouponTable extends React.Component {
     }
 
     render() {
-        const {coupons, page, limit, total, onUpdateCoupon} = this.props
-        const {couponId} = this.state
+        const {warranties, page, limit, total, onUpdateWarranty} = this.props
+        const {warrantyId} = this.state
 
-        const rows = this.makeRow(coupons || [])
+        const rows = this.makeRow(warranties || [])
         const {heading, columnContentTypes} = this.makeColumns()
         const footer = `Showing ${(page - 1) * limit + 1} - ${
             page * limit
@@ -90,20 +100,20 @@ class CouponTable extends React.Component {
                     columnContentTypes={columnContentTypes}
                     footerContent={footer}
                 />
-                <UpdateCouponModal couponId={couponId} toggle={this.toggleUpdate(0)} onUpdateCoupon={onUpdateCoupon}
-                                   coupons={coupons}/>
+                <UpdateWarrantyModal warrantyId={warrantyId} toggle={this.toggleUpdate(0)}
+                                     onUpdateWarranty={onUpdateWarranty} warranties={warranties}/>
             </React.Fragment>
         )
     }
 }
 
-CouponTable.propTypes = {
-    coupons: PropTypes.array.isRequired,
+WarrantyTable.propTypes = {
+    warranties: PropTypes.array.isRequired,
     page: PropTypes.number.isRequired,
     limit: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
     query: PropTypes.object.isRequired,
-    onUpdateCoupon: PropTypes.func.isRequired,
+    onUpdateWarranty: PropTypes.func.isRequired,
 }
 
-export default CouponTable
+export default WarrantyTable

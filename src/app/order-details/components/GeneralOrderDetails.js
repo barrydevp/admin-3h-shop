@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {DescriptionList, Button, TextStyle} from '@shopify/polaris'
 import moment from 'moment'
 import '../../../scss/app.scss'
-import {changeOrderPaymentStatus, markOrderPaidManually} from '../../../services/api/OrderAdminServices'
+import {markOrderPaidManually} from '../../../services/api/OrderAdminServices'
 
 class GeneralOrderDetails extends Component {
 
@@ -14,8 +14,7 @@ class GeneralOrderDetails extends Component {
     }
 
     _upper = (value = '') => value.charAt(0).toUpperCase() + value.slice(1)
-    _mapStyle = ({style, fulfillment_status}) =>
-        this.setState({style, fulfillment_status})
+
     _formatDate = (date, format = 'llll') =>
         date ? moment(date).format(format) : ''
 

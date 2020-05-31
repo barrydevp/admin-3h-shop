@@ -35,6 +35,12 @@ class LoadingProfileDetails extends React.Component {
     }
 }
 
+const roleStyleStatus = {
+    21: 'warning',
+    11: 'info',
+    1: 'critical',
+}
+
 class ProfileDetails extends React.Component {
     constructor(props) {
         super(props)
@@ -187,11 +193,7 @@ class ProfileDetails extends React.Component {
                         <div>Role</div>
                         <Stack spacing="none">
                             <Badge
-                                status={
-                                    roleLabel === 'Admin'
-                                        ? 'attention'
-                                        : 'info'
-                                }
+                                status={roleStyleStatus[_role] || ''}
                             >
                                 {roleLabel}
                             </Badge>

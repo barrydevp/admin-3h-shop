@@ -42,14 +42,18 @@ class ProductTable extends React.Component {
             const descriptionCol = product.description
 
             const outPriceCol = (
-                <TextStyle variation="positive">
+                <Badge
+                    status={'success'}
+                >
                     {product.out_price}
-                </TextStyle>
+                </Badge>
             )
             const discountCol = (
-                <TextStyle variation="subdued">
+                <Badge
+                    status={'attention'}
+                >
                     {product.discount}
-                </TextStyle>
+                </Badge>
             )
 
             rows.push([

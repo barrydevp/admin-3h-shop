@@ -61,18 +61,18 @@ class InsertProductModal extends Component {
 
     _fetchCategories = async () => {
         try {
-            const {success, data, message} = await getListCategory({page:1, limit: 500})
+            const {success, data, message} = await getListCategory({page: 1, limit: 500})
             if (!success) {
                 throw new Error(message)
             }
 
             this.setState({
-                categories: data && data.data && data.data.map(category => {
+                categories: (data && data.data && data.data.map(category => {
                     return {
                         label: category.name,
                         value: category._id,
                     }
-                }) || [],
+                })) || [],
             })
         } catch (e) {
             this.setState({loading: false})
@@ -144,7 +144,7 @@ class InsertProductModal extends Component {
                             label="Image path"
                         />
                         <TextField
-                            value={out_price+""}
+                            value={out_price + ''}
                             type="number"
                             onChange={(value) =>
                                 this._onChange('out_price', value)
@@ -153,7 +153,7 @@ class InsertProductModal extends Component {
                             min={0.1}
                         />
                         <TextField
-                            value={discount+""}
+                            value={discount + ''}
                             type="number"
                             onChange={(value) =>
                                 this._onChange('discount', value)
@@ -167,7 +167,7 @@ class InsertProductModal extends Component {
                             disabled={!categories.length}
                             label="Category"
                             options={categories}
-                            onChange={(value) => this._onChange('category_id', value)}
+                            onChange={(value) => this._onChange('category_id', parseInt(value))}
                             value={category_id}
                         />
                     </Modal.Section>

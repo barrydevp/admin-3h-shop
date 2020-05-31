@@ -25,6 +25,9 @@ class UpdateCouponModal extends Component {
         const coupon = props.coupons && props.coupons.find(e => e._id === props.couponId)
 
         this.state = {
+            code: '',
+            description: '',
+            discount: 1,
             ...coupon,
             datePicker: {
                 month: (coupon ? new Date(coupon.expires_at) : new Date()).getMonth(),
@@ -46,6 +49,9 @@ class UpdateCouponModal extends Component {
             if(!coupon) return
 
             this.setState({
+                code: '',
+                description: '',
+                discount: 1,
                 ...coupon,
                 datePicker: {
                     month: (coupon ? new Date(coupon.expires_at) : new Date()).getMonth(),
@@ -171,7 +177,7 @@ class UpdateCouponModal extends Component {
                 <Modal
                     open={open}
                     onClose={toggle}
-                    title="Update Coupon"
+                    title={'Update ' + code}
                     primaryAction={{
                         content: 'Save',
                         onAction: this._clickSave,

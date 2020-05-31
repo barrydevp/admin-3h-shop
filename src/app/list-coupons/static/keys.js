@@ -1,12 +1,8 @@
 const keys = {
-    name: 'Name',
-    tags: 'Tags',
-    description: 'Description',
-    image_path: 'Image path',
-    out_price: 'Out price',
+    code: 'Code',
     discount: 'Discount',
-    category_id: 'Category id',
-    created_at: 'Created At',
+    description: 'Description',
+    expires_at: 'Expires At',
     updated_at: 'Updated At',
 }
 

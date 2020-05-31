@@ -3,15 +3,16 @@ import {Page} from '@shopify/polaris'
 import Login from './Login'
 import withAuthContext from '../../shared/withAuthContext'
 import {Redirect} from 'react-router-dom'
+import {isAuthenticated as _isAuthenticated} from '../../../services/AuthServices'
 
 class LoginContainer extends Component {
     render() {
         const {authContext} = this.props
         const {isAuthenticated} = authContext
 
-        console.log("hello")
+        // console.log("hello")
 
-        return isAuthenticated ? (
+        return isAuthenticated && _isAuthenticated() ? (
             <Redirect to={'/'} />
         ) : (
             <Page narrowWidth>

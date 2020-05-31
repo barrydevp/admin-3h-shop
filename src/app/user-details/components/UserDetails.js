@@ -64,7 +64,6 @@ class UserDetails extends Component {
     }
 
     render() {
-        const history = getHistory()
         const {loading, user} = this.state
 
         return (
